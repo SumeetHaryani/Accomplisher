@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/skyBlue"
+    tools:context=".MotivatonFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <com.example.sumeetharyani.accomplisher.MotivationVerticalViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="128dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="8dp">
+
+    </com.example.sumeetharyani.accomplisher.MotivationVerticalViewPager>
+
+</FrameLayout>
