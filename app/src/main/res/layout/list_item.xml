@@ -51,7 +51,6 @@
                     android:textAlignment="viewStart"
                     android:textSize="12sp"
                     card_view:layout_constraintBottom_toBottomOf="parent"
-                    card_view:layout_constraintEnd_toStartOf="@+id/priority_text"
                     card_view:layout_constraintStart_toStartOf="parent"
                     card_view:layout_constraintTop_toBottomOf="@+id/task_text"
                     card_view:layout_constraintVertical_bias="0.0" />

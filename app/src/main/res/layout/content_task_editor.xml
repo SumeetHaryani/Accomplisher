@@ -80,7 +80,7 @@
             android:layout_marginTop="16dp"
             android:hint="@string/task_description"
 
-            android:inputType="textMultiLine"
+
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"

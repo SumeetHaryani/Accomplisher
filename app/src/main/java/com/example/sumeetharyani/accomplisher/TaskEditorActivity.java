@@ -38,6 +38,7 @@ import petrov.kristiyan.colorpicker.ColorPicker;
 
 public class TaskEditorActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<Cursor> {
     private static final int NOTIFICATION_ID = 0;
+    private static final int EXISTING_TASK_LOADER = 0;
     public final String TAG = TaskEditorActivity.class.getName();
     private Button colorButton;
     private Spinner categorySpinner;
@@ -50,7 +51,6 @@ public class TaskEditorActivity extends AppCompatActivity implements AdapterView
     private NotificationManager mNotifyManager;
     private long dateTime;
     private Uri mCurrentUri;
-    private static final int EXISTING_TASK_LOADER = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +62,7 @@ public class TaskEditorActivity extends AppCompatActivity implements AdapterView
         mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         categorySpinner = findViewById(R.id.spinner_category);
         prioritySpinner = findViewById(R.id.spinner_priority);
-        taskTitle = findViewById(R.id.edit_text_description);
+        taskTitle = findViewById(R.id.edit_text_title);
         taskDescription = findViewById(R.id.edit_text_description);
         Intent intent = getIntent();
         mCurrentUri = intent.getData();
@@ -249,7 +249,8 @@ public class TaskEditorActivity extends AppCompatActivity implements AdapterView
         }
         if (mCursor.moveToFirst()) {
             String title = mCursor.getString(mCursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_TITLE));
-            String decription = mCursor.getString(mCursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_DESCRIPTION));
+            String description = mCursor.getString(mCursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_DESCRIPTION));
+            Log.d(TAG, "sam *****" + description);
             int category = mCursor.getInt(mCursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_CATEGORY));
             int priority = mCursor.getInt(mCursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_PRIORITY));
             itemColor = mCursor.getInt(mCursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_COLOR));
@@ -257,7 +258,7 @@ public class TaskEditorActivity extends AppCompatActivity implements AdapterView
             categorySpinner.setSelection(category);
             prioritySpinner.setSelection(priority);
             taskTitle.setText(title);
-            taskDescription.setText(decription);
+            taskDescription.setText(description);
         }
     }
 

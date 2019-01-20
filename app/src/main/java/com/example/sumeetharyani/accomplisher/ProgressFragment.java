@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView;
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.AbstractYouTubePlayerListener;
@@ -31,6 +33,8 @@ public class ProgressFragment extends Fragment {
             "9zFJx0YOwms",
             "bcdtV98SIQA"
     };
+
+
     YouTubePlayerView youtubePlayerView;
     Button btnNext;
     Button btnPrev;
@@ -43,6 +47,10 @@ public class ProgressFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("message");
+
+
         View videoView = inflater.inflate(R.layout.fragment_progress, container, false);
         urlIndex = 0;
         btnNext = videoView.findViewById(R.id.button_next);

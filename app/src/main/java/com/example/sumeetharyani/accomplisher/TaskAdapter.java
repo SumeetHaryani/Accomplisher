@@ -27,7 +27,6 @@ import at.markushi.ui.CircleButton;
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
     private Cursor mCursor = null;
     private Context mContext;
-    private CardView cardView;
     public String LOG_TAG = "TaskAdapter";
 
     public TaskAdapter(Context context, Cursor cursor) {
@@ -161,7 +160,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat();
 
 
-            DateFormat dateFormat = simpleDateFormat.getDateTimeInstance();
+            DateFormat dateFormat = DateFormat.getDateTimeInstance();
 
 
             date = dateFormat.format(dateTime);

@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "333334031409-ujuc1pfpr4r164qbkjprq5mr1mcg6a3s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sumeetharyani.accomplisher",
+            "certificate_hash": "14ffbe3d4956bec9363d7972fbc72594fc1865a9"
+          }
+        },
+        {
           "client_id": "333334031409-26i3jjq98bq45lsle63cbrd6ltk54b8s.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -48,7 +56,8 @@
         "ads_service": {
           "status": 2
         }
-      }
+      },
+      "admob_app_id": "ca-app-pub-2855047599062713~8414022663"
     }
   ],
   "configuration_version": "1"

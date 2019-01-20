@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -14,30 +15,64 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.sumeetharyani.accomplisher.data.TaskContract;
 import com.example.sumeetharyani.accomplisher.data.TaskDbHelper;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String ANONYMOUS = "anonymous";
+    private static final int RC_SIGN_IN = 123;
+    static FloatingActionButton fab;
     private SimpleFragmentPagerAdapter fragmentPagerAdapter;
     private SQLiteOpenHelper mDbHelper;
     private ViewPager mViewPager;
-    static FloatingActionButton fab;
+    private String mUsername;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener authStateListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        mUsername = ANONYMOUS;
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        authStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+
+                if (user != null) {
+                    onSignedIntialize(user.getDisplayName());
+                    Toast.makeText(MainActivity.this, "You are signed in " + mUsername, Toast.LENGTH_SHORT).show();
+                } else {
+                    onSignedOutIntialize();
+                    startActivityForResult(
+                            AuthUI.getInstance()
+                                    .createSignInIntentBuilder()
+                                    .setIsSmartLockEnabled(false)
+
+                                    .setAvailableProviders(Arrays.asList(
+                                            new AuthUI.IdpConfig.GoogleBuilder().build(),
+                                            new AuthUI.IdpConfig.EmailBuilder().build())
+                                    )
+                                    .build(),
+                            RC_SIGN_IN);
+                }
+
+
+            }
+        };
         mDbHelper = new TaskDbHelper(this);
         fragmentPagerAdapter = new SimpleFragmentPagerAdapter(this, getSupportFragmentManager());
         // Set up the ViewPager with the sections adapter.
@@ -80,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         SQLiteDatabase database = mDbHelper.getReadableDatabase();
-        String[] projection = {TaskContract.TaskEntry.COLUMN_TASK_TITLE, TaskContract.TaskEntry.COLUMN_TASK_CATEGORY,
+        String[] projection = {TaskContract.TaskEntry.COLUMN_TASK_TITLE, TaskContract.TaskEntry.COLUMN_TASK_DESCRIPTION, TaskContract.TaskEntry.COLUMN_TASK_CATEGORY,
                 TaskContract.TaskEntry.COLUMN_TASK_PRIORITY, TaskContract.TaskEntry.COLUMN_TASK_DATE};
 
 
@@ -98,32 +133,54 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case (R.id.action_signOut):
-
-                FirebaseAuth.getInstance().signOut();
-                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestEmail()
-                        .build();
-                GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-                mGoogleSignInClient.signOut()
-                        .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-                                startActivity(i);
-                                finish();
-
-                            }
-                        });
+                AuthUI.getInstance()
+                        .signOut(this);
                 return true;
             case (R.id.action_delete_all):
                 getContentResolver().delete(TaskContract.TaskEntry.CONTENT_URI, null, null);
-
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            if (requestCode == RESULT_OK) {
+                Toast.makeText(MainActivity.this, "Signed in", Toast.LENGTH_SHORT).show();
 
+            } else if (resultCode == RESULT_CANCELED) {
+                finish();
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        firebaseAuth.addAuthStateListener(authStateListener);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (authStateListener != null) {
+            firebaseAuth.removeAuthStateListener(authStateListener);
+        }
+
+    }
+
+    private void onSignedIntialize(String username) {
+        mUsername = username;
+
+
+    }
+
+    private void onSignedOutIntialize() {
+        mUsername = ANONYMOUS;
+
+    }
 }

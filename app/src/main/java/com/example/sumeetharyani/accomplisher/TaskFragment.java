@@ -18,20 +18,22 @@ import android.view.ViewGroup;
 
 import com.example.sumeetharyani.accomplisher.data.TaskContract;
 import com.example.sumeetharyani.accomplisher.data.TaskDbHelper;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 @SuppressLint("ValidFragment")
 public class TaskFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-    private RecyclerView recyclerView;
-    TaskAdapter taskAdapter;
-    private Cursor cursor;
     private static final String ARG_SECTION_NUMBER = "section_number";
+    TaskAdapter taskAdapter;
+    SQLiteOpenHelper hp;
+    private RecyclerView recyclerView;
+    private Cursor cursor;
+    private FirebaseAuth firebaseAuth;
 
     @SuppressLint("ValidFragment")
     public TaskFragment() {
 
     }
-
-    SQLiteOpenHelper hp;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,6 +52,11 @@ public class TaskFragment extends Fragment implements LoaderManager.LoaderCallba
         View taskView = inflater.inflate(R.layout.fragment_task, container, false);
         recyclerView = (RecyclerView) taskView.findViewById(R.id.taskList);
         taskAdapter = new TaskAdapter(getContext(), cursor);
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+//        Toast.makeText(getContext(),user.getDisplayName()+" "+user.getUid(),Toast.LENGTH_SHORT).show();
+        // String UID=user.getUid();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         recyclerView.setAdapter(taskAdapter);
@@ -70,7 +77,7 @@ public class TaskFragment extends Fragment implements LoaderManager.LoaderCallba
                 projection,
                 null,
                 null,
-                null);
+                TaskContract.TaskEntry.COLUMN_TASK_PRIORITY + " ASC");
     }
 
     @Override
