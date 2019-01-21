@@ -8,6 +8,7 @@ import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -29,6 +30,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.sumeetharyani.accomplisher.data.TaskContract;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -51,6 +54,9 @@ public class TaskEditorActivity extends AppCompatActivity implements AdapterView
     private NotificationManager mNotifyManager;
     private long dateTime;
     private Uri mCurrentUri;
+    private  FirebaseAuth firebaseAuth;
+    public static final String MY_PREFS_NAME = "MyPrefsFile";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,6 +146,9 @@ public class TaskEditorActivity extends AppCompatActivity implements AdapterView
         prioritySpinnerPosition = prioritySpinner.getSelectedItemPosition();
         categorySpinnerPosition = categorySpinner.getSelectedItemPosition();
 
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+        String UID = prefs.getString("UID", null);
+
         ContentValues values = new ContentValues();
         values.put(TaskContract.TaskEntry.COLUMN_TASK_TITLE, title);
         values.put(TaskContract.TaskEntry.COLUMN_TASK_DESCRIPTION, description);
@@ -147,6 +156,8 @@ public class TaskEditorActivity extends AppCompatActivity implements AdapterView
         values.put(TaskContract.TaskEntry.COLUMN_TASK_CATEGORY, categorySpinnerPosition);
         values.put(TaskContract.TaskEntry.COLUMN_TASK_DATE, dateTime);
         values.put(TaskContract.TaskEntry.COLUMN_TASK_COLOR, itemColor);
+        values.put(TaskContract.TaskEntry.COLUMN_TASK_UID, UID);
+
         if (!title.isEmpty() && mCurrentUri == null) {
             getContentResolver().insert(TaskContract.TaskEntry.CONTENT_URI, values);
             sendNotification();
@@ -250,7 +261,6 @@ public class TaskEditorActivity extends AppCompatActivity implements AdapterView
         if (mCursor.moveToFirst()) {
             String title = mCursor.getString(mCursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_TITLE));
             String description = mCursor.getString(mCursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_DESCRIPTION));
-            Log.d(TAG, "sam *****" + description);
             int category = mCursor.getInt(mCursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_CATEGORY));
             int priority = mCursor.getInt(mCursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_PRIORITY));
             itemColor = mCursor.getInt(mCursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_COLOR));

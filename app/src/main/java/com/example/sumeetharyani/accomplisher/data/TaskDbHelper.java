@@ -25,7 +25,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 TaskContract.TaskEntry.COLUMN_TASK_DATE + " INTEGER NOT NULL, " +
                 TaskContract.TaskEntry.COLUMN_TASK_PRIORITY + " INTEGER NOT NULL DEFAULT 1, " +
                 TaskContract.TaskEntry.COLUMN_TASK_COLOR + " INTEGER DEFAULT 0, " +
-                TaskContract.TaskEntry.COLUMN_TASK_STATUS + " INTEGER);";
+                TaskContract.TaskEntry.COLUMN_TASK_UID + " TEXT NOT NULL);";
         Log.d(TAG, SQL_CREATE_TASK_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_TASK_TABLE);
     }

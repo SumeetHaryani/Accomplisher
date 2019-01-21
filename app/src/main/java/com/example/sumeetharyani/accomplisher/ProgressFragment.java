@@ -8,16 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView;
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.YouTubePlayerInitListener;
 
 public class ProgressFragment extends Fragment {
-    String videoUrl[] = {
-            "wnHW6o8WMas", "Fp5A8CXyS_E", "p-4zGxeFZOs", "h1rA2jMS-6I", "26U_seo0a1g",
+    String videoUrl[] = {"h1rA2jMS-6I", "3rHkGy9JfCs",
+            "wnHW6o8WMas", "p-4zGxeFZOs", "26U_seo0a1g",
             "dlz-Ne4aqDY",
             "CIvx6q0YhNk",
             "c-75K2F3jUg",
@@ -27,7 +25,7 @@ public class ProgressFragment extends Fragment {
             "DwkJww5_7vw",
             "af9qXLrPadA",
             "fFalmesXWMY",
-            "3rHkGy9JfCs",
+            "Fp5A8CXyS_E",
             "9qNU-lvPXKw",
             "0Bpoh92TQ9g",
             "9zFJx0YOwms",
@@ -36,8 +34,10 @@ public class ProgressFragment extends Fragment {
 
 
     YouTubePlayerView youtubePlayerView;
+    YouTubePlayer youTubePlayer;
     Button btnNext;
     Button btnPrev;
+    Button btnPlay;
     int urlIndex = 0;
 
     public ProgressFragment() {
@@ -47,29 +47,24 @@ public class ProgressFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("message");
 
 
         View videoView = inflater.inflate(R.layout.fragment_progress, container, false);
         urlIndex = 0;
         btnNext = videoView.findViewById(R.id.button_next);
         btnPrev = videoView.findViewById(R.id.button_prev);
+        btnPlay = videoView.findViewById(R.id.button_play);
         youtubePlayerView = videoView.findViewById(R.id.youtube_player_view);
         getLifecycle().addObserver(youtubePlayerView);
-        youtubePlayerView.initialize(new YouTubePlayerInitListener() {
+        initializer();
+        btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onInitSuccess(@NonNull final YouTubePlayer initializedYouTubePlayer) {
-                initializedYouTubePlayer.addListener(new AbstractYouTubePlayerListener() {
-                    @Override
-                    public void onReady() {
-                        String videoId = videoUrl[urlIndex];
-                        initializedYouTubePlayer.loadVideo(videoId, 5);
-                        initializedYouTubePlayer.pause();
-                    }
-                });
+            public void onClick(View v) {
+                if (youTubePlayer != null)
+                    youTubePlayer.play();
+
             }
-        }, true);
+        });
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,6 +77,7 @@ public class ProgressFragment extends Fragment {
             public void onClick(View view) {
                 if (urlIndex > 0) {
                     urlIndex--;
+
                 }
 
                 initializer();
@@ -99,11 +95,13 @@ public class ProgressFragment extends Fragment {
                     @Override
                     public void onReady() {
                         String videoId = videoUrl[urlIndex];
-                        initializedYouTubePlayer.loadVideo(videoId, 5);
-
+                        initializedYouTubePlayer.cueVideo(videoId, 5);
                     }
                 });
+                youTubePlayer = initializedYouTubePlayer;
+
             }
         }, true);
+
     }
 }

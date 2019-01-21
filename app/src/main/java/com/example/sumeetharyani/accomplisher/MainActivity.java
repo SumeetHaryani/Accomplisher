@@ -1,6 +1,7 @@
 package com.example.sumeetharyani.accomplisher;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private SQLiteOpenHelper mDbHelper;
     private ViewPager mViewPager;
     private String mUsername;
+    public static final String MY_PREFS_NAME = "MyPrefsFile";
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
 
@@ -46,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         firebaseAuth = FirebaseAuth.getInstance();
 
-        FirebaseUser user = firebaseAuth.getCurrentUser();
+        final SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -54,8 +57,12 @@ public class MainActivity extends AppCompatActivity {
 
                 if (user != null) {
                     onSignedIntialize(user.getDisplayName());
+                    editor.putString("UID", user.getUid());
+                    editor.apply();
                     Toast.makeText(MainActivity.this, "You are signed in " + mUsername, Toast.LENGTH_SHORT).show();
                 } else {
+                    editor.remove("UID");
+                    editor.commit();
                     onSignedOutIntialize();
                     startActivityForResult(
                             AuthUI.getInstance()
@@ -66,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
                                             new AuthUI.IdpConfig.GoogleBuilder().build(),
                                             new AuthUI.IdpConfig.EmailBuilder().build())
                                     )
+
                                     .build(),
                             RC_SIGN_IN);
                 }
@@ -149,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
             if (requestCode == RESULT_OK) {
+
                 Toast.makeText(MainActivity.this, "Signed in", Toast.LENGTH_SHORT).show();
 
             } else if (resultCode == RESULT_CANCELED) {

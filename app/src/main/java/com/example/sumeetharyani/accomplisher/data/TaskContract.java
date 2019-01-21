@@ -20,7 +20,7 @@ public final class TaskContract {
         public static final String COLUMN_TASK_PRIORITY = "priority";
         public static final String COLUMN_TASK_DATE = "date";
         public static final String COLUMN_TASK_COLOR = "color";
-        public static final String COLUMN_TASK_STATUS = "task_completed";
+        public static final String COLUMN_TASK_UID = "user_uid";
         public static final String COLUMN_TASK_CATEGORY = "category";
 
 

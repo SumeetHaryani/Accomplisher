@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.sumeetharyani.accomplisher.data.TaskContract;
-import com.example.sumeetharyani.accomplisher.data.TaskDbHelper;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -25,9 +24,12 @@ import java.text.SimpleDateFormat;
 import at.markushi.ui.CircleButton;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
+    public String LOG_TAG = "TaskAdapter";
+    int id = -1;
     private Cursor mCursor = null;
     private Context mContext;
-    public String LOG_TAG = "TaskAdapter";
+    private String selectionArgs[] = null;
+
 
     public TaskAdapter(Context context, Cursor cursor) {
         this.mContext = context;
@@ -35,37 +37,17 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     }
 
-    public void setData(Cursor cursor) {
-        mCursor = cursor;
-        notifyDataSetChanged();
-    }
+    public void swapCursor(Cursor cursor) {
 
-    private String selectionArgs[] = null;
-
-    public class TaskViewHolder extends RecyclerView.ViewHolder {
-        public TextView taskTitle;
-        public TextView taskPriority;
-        public TextView taskCategory;
-        public TextView taskDateTime;
-        public CircleButton taskButton;
-
-        public CardView cardView;
-
-        public TaskViewHolder(View itemView) {
-            super(itemView);
-            taskTitle = itemView.findViewById(R.id.task_text);
-            taskPriority = itemView.findViewById(R.id.priority_text);
-            taskCategory = itemView.findViewById(R.id.category_text);
-            taskDateTime = itemView.findViewById(R.id.dateTime_text);
-            taskButton = itemView.findViewById(R.id.btn_task_complete);
-
-            cardView = itemView.findViewById(R.id.card_view);
-
+        // Always close the previous mCursor first
+        if (mCursor != null && mCursor != cursor) {
+            mCursor.close();
         }
-
-        TaskDbHelper dbh = new TaskDbHelper(mContext);
-
-
+        mCursor = cursor;
+        if (cursor != null) {
+            // Force the RecyclerView to refresh
+            this.notifyDataSetChanged();
+        }
     }
 
     @NonNull
@@ -75,8 +57,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         View view = layoutInflater.inflate(R.layout.list_item, parent, false);
         return new TaskViewHolder(view);
     }
-
-    int id = -1;
 
     @Override
     public void onBindViewHolder(@NonNull final TaskViewHolder holder, final int position) {
@@ -89,6 +69,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             long dateTime = 0;
             int category = 0;
             int color = 0;
+
             if (mCursor.moveToPosition(position)) {
                 title = mCursor.getString(mCursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_TITLE));
                 dateTime = mCursor.getLong(mCursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_DATE));
@@ -181,6 +162,31 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         } else {
             return -1;
         }
+    }
+
+    public class TaskViewHolder extends RecyclerView.ViewHolder {
+        public TextView taskTitle;
+        public TextView taskPriority;
+        public TextView taskCategory;
+        public TextView taskDateTime;
+        public CircleButton taskButton;
+
+        public CardView cardView;
+
+
+        public TaskViewHolder(View itemView) {
+            super(itemView);
+            taskTitle = itemView.findViewById(R.id.task_text);
+            taskPriority = itemView.findViewById(R.id.priority_text);
+            taskCategory = itemView.findViewById(R.id.category_text);
+            taskDateTime = itemView.findViewById(R.id.dateTime_text);
+            taskButton = itemView.findViewById(R.id.btn_task_complete);
+
+            cardView = itemView.findViewById(R.id.card_view);
+
+        }
+
+
     }
 }
 

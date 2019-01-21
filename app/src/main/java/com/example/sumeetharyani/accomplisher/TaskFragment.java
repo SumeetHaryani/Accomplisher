@@ -1,6 +1,7 @@
 package com.example.sumeetharyani.accomplisher;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
@@ -19,16 +20,19 @@ import android.view.ViewGroup;
 import com.example.sumeetharyani.accomplisher.data.TaskContract;
 import com.example.sumeetharyani.accomplisher.data.TaskDbHelper;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+
+import static android.content.Context.MODE_PRIVATE;
 
 @SuppressLint("ValidFragment")
 public class TaskFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+    public static final String MY_PREFS_NAME = "MyPrefsFile";
     private static final String ARG_SECTION_NUMBER = "section_number";
     TaskAdapter taskAdapter;
     SQLiteOpenHelper hp;
     private RecyclerView recyclerView;
     private Cursor cursor;
     private FirebaseAuth firebaseAuth;
+
 
     @SuppressLint("ValidFragment")
     public TaskFragment() {
@@ -46,6 +50,7 @@ public class TaskFragment extends Fragment implements LoaderManager.LoaderCallba
 
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -54,9 +59,7 @@ public class TaskFragment extends Fragment implements LoaderManager.LoaderCallba
         taskAdapter = new TaskAdapter(getContext(), cursor);
         firebaseAuth = FirebaseAuth.getInstance();
 
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-//        Toast.makeText(getContext(),user.getDisplayName()+" "+user.getUid(),Toast.LENGTH_SHORT).show();
-        // String UID=user.getUid();
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         recyclerView.setAdapter(taskAdapter);
@@ -70,24 +73,40 @@ public class TaskFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
         String[] projection = {TaskContract.TaskEntry._ID, TaskContract.TaskEntry.COLUMN_TASK_TITLE, TaskContract.TaskEntry.COLUMN_TASK_DESCRIPTION, TaskContract.TaskEntry.COLUMN_TASK_CATEGORY,
-                TaskContract.TaskEntry.COLUMN_TASK_PRIORITY, TaskContract.TaskEntry.COLUMN_TASK_DATE, TaskContract.TaskEntry.COLUMN_TASK_COLOR};
-
+                TaskContract.TaskEntry.COLUMN_TASK_PRIORITY, TaskContract.TaskEntry.COLUMN_TASK_DATE, TaskContract.TaskEntry.COLUMN_TASK_COLOR, TaskContract.TaskEntry.COLUMN_TASK_UID};
+        SharedPreferences prefs = getContext().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+//        String UID = prefs.getString("UID", null);
+//        String selection= TaskContract.TaskEntry.COLUMN_TASK_UID+"=?";
+//        String[] selectionArg= new String []{UID};
+//        if (UID!=null){
+//            Log.d(TAG, "*123");
+//        return new CursorLoader(getActivity(),
+//                TaskContract.TaskEntry.CONTENT_URI,
+//                projection,
+//                selection,
+//                selectionArg,
+//                TaskContract.TaskEntry.COLUMN_TASK_PRIORITY + " ASC");}
+//                else
         return new CursorLoader(getActivity(),
                 TaskContract.TaskEntry.CONTENT_URI,
                 projection,
                 null,
                 null,
                 TaskContract.TaskEntry.COLUMN_TASK_PRIORITY + " ASC");
+
+
     }
 
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
-        taskAdapter.setData(data);
+        taskAdapter.swapCursor(data);
     }
 
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
-        taskAdapter.setData(null);
+        taskAdapter.swapCursor(null);
     }
+
+
 }
 

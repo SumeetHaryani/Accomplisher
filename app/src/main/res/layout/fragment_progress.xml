@@ -20,7 +20,14 @@
             android:text="@string/prev"
 
             />
+        <Button
+            android:id="@+id/button_play"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="play"
 
+            />
         <Button
             android:id="@+id/button_next"
             android:layout_width="0dp"
