@@ -24,7 +24,8 @@
             app:layout_scrollFlags="scroll|enterAlways"
 
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="@string/app_name" />
+            app:title="@string/app_name"
+            tools:ignore="PrivateResource" />
 
         <android.support.v7.widget.LinearLayoutCompat
             android:layout_width="match_parent"

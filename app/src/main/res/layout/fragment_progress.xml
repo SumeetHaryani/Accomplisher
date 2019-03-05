@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context=".ProgressFragment">
+    tools:context=".VideoFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,23 +18,24 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/prev"
+            tools:ignore="ButtonStyle" />
 
-            />
         <Button
             android:id="@+id/button_play"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="play"
+            android:text="@string/play"
+            tools:ignore="ButtonStyle" />
 
-            />
         <Button
             android:id="@+id/button_next"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
             android:layout_weight="1"
-            android:text="@string/next" />
+            android:text="@string/next"
+            tools:ignore="ButtonStyle,RtlHardcoded" />
 
     </LinearLayout>
 

@@ -9,9 +9,8 @@ import android.view.MotionEvent;
 import android.view.View;
 
 public class MotivationVerticalViewPager extends ViewPager {
-    private static final float SWIPE_X_MIN_THRESHOLD = 50; // Decide this magical nuber as per your requirement
-    float x = 0;
-    float mStartDragX = 0;
+    private static final float SWIPE_X_MIN_THRESHOLD = 50;
+    private float x = 0;
 
     public MotivationVerticalViewPager(Context context) {
         super(context);
@@ -24,15 +23,14 @@ public class MotivationVerticalViewPager extends ViewPager {
     }
 
     private void init() {
-        // The majority of the magic happens here
         setPageTransformer(true, new VerticalPageTransformer());
-        // The easiest way to get rid of the overscroll drawing that happens on the left and right
         setOverScrollMode(OVER_SCROLL_NEVER);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (getAdapter() != null) {
+            float mStartDragX = 0;
             if (getCurrentItem() >= 0 || getCurrentItem() < getAdapter().getCount()) {
                 swapXY(event);
                 final int action = event.getAction();
@@ -74,7 +72,7 @@ public class MotivationVerticalViewPager extends ViewPager {
                 x = event.getX();
                 break;
         }
-        swapXY(event); // return touch coordinates to original reference frame for any child views
+        swapXY(event);
         return intercepted;
     }
 
@@ -84,12 +82,9 @@ public class MotivationVerticalViewPager extends ViewPager {
     private MotionEvent swapXY(MotionEvent ev) {
         float width = getWidth();
         float height = getHeight();
-
         float newX = (ev.getY() / height) * width;
         float newY = (ev.getX() / width) * height;
-
         ev.setLocation(newX, newY);
-
         return ev;
     }
 
@@ -98,35 +93,23 @@ public class MotivationVerticalViewPager extends ViewPager {
 
         @Override
         public void transformPage(View view, float position) {
-
-            if (position < -1) { // [-Infinity,-1)
-                // This page is way off-screen to the left.
+            if (position < -1) {
                 view.setAlpha(0);
-
             } else if (position <= 0) {
-
                 view.setAlpha(1);
-
                 view.setTranslationX(view.getWidth() * -position);
-
-
                 float yPosition = position * view.getHeight();
                 view.setTranslationY(yPosition);
                 view.setScaleX(1);
                 view.setScaleY(1);
-            } else if (position <= 1) { // [-1,1]
+            } else if (position <= 1) {
                 view.setAlpha(1);
-
-                // Counteract the default slide transition
                 view.setTranslationX(view.getWidth() * -position);
-
-                float scaleFactor = MIN_SCALE
-                        + (1 - MIN_SCALE) * (1 - Math.abs(position));
+                float scaleFactor = MIN_SCALE + (1 - MIN_SCALE) * (1 - Math.abs(position));
                 view.setScaleX(scaleFactor);
                 view.setScaleY(scaleFactor);
 
-            } else { // (1,+Infinity]
-                // This page is way off-screen to the right.
+            } else {
                 view.setAlpha(0);
             }
         }

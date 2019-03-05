@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/appbar_padding_top"
-
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
@@ -25,7 +24,8 @@
             app:layout_scrollFlags="enterAlwaysCollapsed"
             app:navigationIcon="@drawable/iconsmall"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="@string/app_name">
+            app:title="@string/app_name"
+            tools:ignore="PrivateResource">
 
         </android.support.v7.widget.Toolbar>
 
@@ -44,13 +44,13 @@
                 android:id="@+id/tabMotivation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/tab_progress" />
+                android:text="@string/tab_motivation" />
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tabProgress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/tab_motivation" />
+                android:text="@string/tab_wallpaper" />
 
         </android.support.design.widget.TabLayout>
     </android.support.design.widget.AppBarLayout>

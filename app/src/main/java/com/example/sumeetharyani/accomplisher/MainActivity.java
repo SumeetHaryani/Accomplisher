@@ -1,14 +1,12 @@
 package com.example.sumeetharyani.accomplisher;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -19,7 +17,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.sumeetharyani.accomplisher.data.TaskContract;
-import com.example.sumeetharyani.accomplisher.data.TaskDbHelper;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,14 +25,13 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String ANONYMOUS = "anonymous";
+    private static final String ANONYMOUS = "anonymous";
+    private static final String MY_PREFS_NAME = "MyPrefsFile";
     private static final int RC_SIGN_IN = 123;
-    static FloatingActionButton fab;
-    private SimpleFragmentPagerAdapter fragmentPagerAdapter;
-    private SQLiteOpenHelper mDbHelper;
+    @SuppressLint("StaticFieldLeak")
+    private static FloatingActionButton fab;
     private ViewPager mViewPager;
     private String mUsername;
-    public static final String MY_PREFS_NAME = "MyPrefsFile";
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
 
@@ -47,19 +43,15 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         firebaseAuth = FirebaseAuth.getInstance();
-
         final SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-
                 if (user != null) {
                     onSignedIntialize(user.getDisplayName());
                     editor.putString("UID", user.getUid());
                     editor.apply();
-                    Toast.makeText(MainActivity.this, "You are signed in " + mUsername, Toast.LENGTH_SHORT).show();
                 } else {
                     editor.remove("UID");
                     editor.commit();
@@ -68,28 +60,23 @@ public class MainActivity extends AppCompatActivity {
                             AuthUI.getInstance()
                                     .createSignInIntentBuilder()
                                     .setIsSmartLockEnabled(false)
-
+                                    .setLogo(R.drawable.iconbig)
                                     .setAvailableProviders(Arrays.asList(
                                             new AuthUI.IdpConfig.GoogleBuilder().build(),
                                             new AuthUI.IdpConfig.EmailBuilder().build())
                                     )
-
                                     .build(),
                             RC_SIGN_IN);
                 }
 
-
             }
         };
-        mDbHelper = new TaskDbHelper(this);
-        fragmentPagerAdapter = new SimpleFragmentPagerAdapter(this, getSupportFragmentManager());
+        SimpleFragmentPagerAdapter fragmentPagerAdapter = new SimpleFragmentPagerAdapter(this, getSupportFragmentManager());
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(fragmentPagerAdapter);
         mViewPager.setOffscreenPageLimit(3);
-
         TabLayout tabLayout = findViewById(R.id.tabs);
-
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout) {
             @Override
             public void onPageSelected(int position) {
@@ -111,22 +98,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
-
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
                 Intent intent = new Intent(MainActivity.this, TaskEditorActivity.class);
                 startActivity(intent);
             }
         });
-        SQLiteDatabase database = mDbHelper.getReadableDatabase();
-        String[] projection = {TaskContract.TaskEntry.COLUMN_TASK_TITLE, TaskContract.TaskEntry.COLUMN_TASK_DESCRIPTION, TaskContract.TaskEntry.COLUMN_TASK_CATEGORY,
-                TaskContract.TaskEntry.COLUMN_TASK_PRIORITY, TaskContract.TaskEntry.COLUMN_TASK_DATE};
-
-
     }
 
     @Override
@@ -147,8 +126,11 @@ public class MainActivity extends AppCompatActivity {
             case (R.id.action_delete_all):
                 getContentResolver().delete(TaskContract.TaskEntry.CONTENT_URI, null, null);
                 return true;
+            case R.id.action_upload:
+                return false;
+            default:
+                break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -157,8 +139,7 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
             if (requestCode == RESULT_OK) {
-
-                Toast.makeText(MainActivity.this, "Signed in", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Signed in " + mUsername, Toast.LENGTH_SHORT).show();
 
             } else if (resultCode == RESULT_CANCELED) {
                 finish();
@@ -184,8 +165,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void onSignedIntialize(String username) {
         mUsername = username;
-
-
     }
 
     private void onSignedOutIntialize() {

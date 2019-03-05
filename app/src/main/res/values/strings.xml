@@ -1,9 +1,9 @@
-<resources>
-    <string name="app_name">Accomplisher</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name" tools:ignore="PrivateResource">Accomplisher</string>
     <string name="tab_task">TASKS</string>
     <string name="tab_motivation">MOTIVATION</string>
-    <string name="tab_progress">PROGRESS</string>
-    <string name="action_settings">Settings</string>
+    <string name="tab_wallpaper">WALLPAPER</string>
+    <string name="action_delete">Delete</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string-array name="category">
         <item>Personal</item>
@@ -137,4 +137,8 @@
     <string name="next">Next</string>
     <string name="set_as_wallpaper">Set As Wallpaper</string>
     <string name="img_wallpaper">img Wallpaper</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="upload_wallpaper">Upload Wallpaper</string>
+    <string name="wallpaper">wallpaper</string>
+    <string name="play">play</string>
 </resources>

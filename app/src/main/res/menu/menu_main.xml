@@ -5,12 +5,17 @@
     <item
         android:id="@+id/action_signOut"
         android:orderInCategory="100"
-        android:title="Sign Out"
+        android:title="@string/sign_out"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_delete_all"
         android:orderInCategory="100"
         android:title="@string/action_delete_tasks"
         app:showAsAction="never" />
-
+    <item
+        android:id="@+id/action_upload"
+        android:orderInCategory="100"
+        android:title="@string/upload_wallpaper"
+        android:visible="false"
+        app:showAsAction="never" />
 </menu>

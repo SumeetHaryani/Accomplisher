@@ -13,8 +13,8 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView;
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.YouTubePlayerInitListener;
 
-public class ProgressFragment extends Fragment {
-    String videoUrl[] = {"h1rA2jMS-6I", "3rHkGy9JfCs",
+public class VideoFragment extends Fragment {
+    private final String[] videoUrl = {"h1rA2jMS-6I", "3rHkGy9JfCs",
             "wnHW6o8WMas", "p-4zGxeFZOs", "26U_seo0a1g",
             "dlz-Ne4aqDY",
             "CIvx6q0YhNk",
@@ -33,22 +33,20 @@ public class ProgressFragment extends Fragment {
     };
 
 
-    YouTubePlayerView youtubePlayerView;
-    YouTubePlayer youTubePlayer;
-    Button btnNext;
-    Button btnPrev;
-    Button btnPlay;
-    int urlIndex = 0;
+    private YouTubePlayerView youtubePlayerView;
+    private YouTubePlayer youTubePlayer;
+    private Button btnNext;
+    private Button btnPrev;
+    private Button btnPlay;
+    private int urlIndex = 0;
 
-    public ProgressFragment() {
+    public VideoFragment() {
     }
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-
         View videoView = inflater.inflate(R.layout.fragment_progress, container, false);
         urlIndex = 0;
         btnNext = videoView.findViewById(R.id.button_next);
@@ -79,7 +77,6 @@ public class ProgressFragment extends Fragment {
                     urlIndex--;
 
                 }
-
                 initializer();
 
             }
@@ -87,7 +84,7 @@ public class ProgressFragment extends Fragment {
         return videoView;
     }
 
-    void initializer() {
+    private void initializer() {
         youtubePlayerView.initialize(new YouTubePlayerInitListener() {
             @Override
             public void onInitSuccess(@NonNull final YouTubePlayer initializedYouTubePlayer) {

@@ -1,6 +1,7 @@
 package com.example.sumeetharyani.accomplisher;
 
 
+import android.annotation.SuppressLint;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -19,26 +20,22 @@ import android.widget.TextView;
 import com.example.sumeetharyani.accomplisher.data.TaskContract;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 import at.markushi.ui.CircleButton;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
-    public String LOG_TAG = "TaskAdapter";
-    int id = -1;
-    private Cursor mCursor = null;
-    private Context mContext;
-    private String selectionArgs[] = null;
+    private int id = -1;
+    private Cursor mCursor;
+    private final Context mContext;
 
 
-    public TaskAdapter(Context context, Cursor cursor) {
+    TaskAdapter(Context context, Cursor cursor) {
         this.mContext = context;
         mCursor = cursor;
 
     }
 
-    public void swapCursor(Cursor cursor) {
-
+    void swapCursor(Cursor cursor) {
         // Always close the previous mCursor first
         if (mCursor != null && mCursor != cursor) {
             mCursor.close();
@@ -58,10 +55,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         return new TaskViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull final TaskViewHolder holder, final int position) {
-        int pos = position;
-
         if (mCursor != null) {
             String title = null;
             String date;
@@ -69,7 +65,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             long dateTime = 0;
             int category = 0;
             int color = 0;
-
             if (mCursor.moveToPosition(position)) {
                 title = mCursor.getString(mCursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_TITLE));
                 dateTime = mCursor.getLong(mCursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_DATE));
@@ -92,10 +87,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             if (color != 0) {
                 holder.cardView.setCardBackgroundColor(color);
             } else {
-
                 holder.cardView.setCardBackgroundColor(mContext.getResources().getColor(R.color.card));
             }
-
             holder.taskButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -105,14 +98,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                     id = mCursor.getInt(mCursor.getColumnIndex(TaskContract.TaskEntry._ID));
                     Uri currentUri = ContentUris.withAppendedId(TaskContract.TaskEntry.CONTENT_URI, id);
                     mContext.getContentResolver().delete(currentUri, null, null);
-
                     notifyItemRemoved(holder.getAdapterPosition());
                     notifyItemRangeChanged(holder.getAdapterPosition(), getItemCount());
 
                 }
             });
-
-
             switch (category) {
                 case 0:
                     holder.taskCategory.setText("Personal");
@@ -135,23 +125,15 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                     holder.taskPriority.setText("Priority:Low");
                     break;
             }
-
-
             holder.taskTitle.setText(title);
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat();
-
-
             DateFormat dateFormat = DateFormat.getDateTimeInstance();
-
-
             date = dateFormat.format(dateTime);
             holder.taskDateTime.setText(date);
 
-
         } else {
+            String LOG_TAG = "TaskAdapter";
             Log.e(LOG_TAG, "onBindViewHolder: Cursor is null.");
         }
-
 
     }
 
@@ -164,28 +146,26 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         }
     }
 
-    public class TaskViewHolder extends RecyclerView.ViewHolder {
-        public TextView taskTitle;
-        public TextView taskPriority;
-        public TextView taskCategory;
-        public TextView taskDateTime;
-        public CircleButton taskButton;
+    class TaskViewHolder extends RecyclerView.ViewHolder {
+        final TextView taskTitle;
+        final TextView taskPriority;
+        final TextView taskCategory;
+        final TextView taskDateTime;
+        final CircleButton taskButton;
 
-        public CardView cardView;
+        final CardView cardView;
 
 
-        public TaskViewHolder(View itemView) {
+        TaskViewHolder(View itemView) {
             super(itemView);
             taskTitle = itemView.findViewById(R.id.task_text);
             taskPriority = itemView.findViewById(R.id.priority_text);
             taskCategory = itemView.findViewById(R.id.category_text);
             taskDateTime = itemView.findViewById(R.id.dateTime_text);
             taskButton = itemView.findViewById(R.id.btn_task_complete);
-
             cardView = itemView.findViewById(R.id.card_view);
 
         }
-
 
     }
 }

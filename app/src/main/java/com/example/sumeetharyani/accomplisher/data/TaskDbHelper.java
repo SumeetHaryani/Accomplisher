@@ -7,9 +7,9 @@ import android.util.Log;
 
 
 public class TaskDbHelper extends SQLiteOpenHelper {
-    public static String TAG = TaskDbHelper.class.getName();
+    private static final String TAG = TaskDbHelper.class.getName();
     private static final int DATABASE_VERSION = 1;
-    private static String DATABASE_NAME = "accomplisher.db";
+    private static final String DATABASE_NAME = "accomplisher.db";
 
     public TaskDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
