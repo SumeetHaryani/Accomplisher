@@ -5,7 +5,7 @@ A motivational app where you can add your daily tasks,watch motivational videos,
 <img src="/screenshots/1.png" height="400px" width="200px"/><img src="/screenshots/2.png" height="400px"/><img src="/screenshots/3.png" height="400px"/><img src="/screenshots/5.png" height="400px"/><img src="screenshots/4.png" height="400px" width="200px"/><img src="screenshots/7.png" height="400px"/><img src="screenshots/8.png" height="400px"/><img src="screenshots/9.png" height="400px"/><img src="/screenshots/10.png" height="400px"/><img src="/screenshots/12.png" height="400px"/><img src="/screenshots/11.png" height="400px"/><img src="/screenshots/13.png" height="400px"/>
 ## Download
 App Download Link: 
-[Accomplisher.apk](https://www.youtube.com/redirect?q=https%3A%2F%2Fdrive.google.com%2Fuc%3Fauthuser%3D0%26id%3D1w7Xr07s1A-5RvNrgz5VE0ffbB8y95LCi%26export%3Ddownload&redir_token=_5F29mea5zjD9rCstrrdN_Dp4rd8MTU1MTk2MTUwN0AxNTUxODc1MTA3&event=video_description&v=6c6mMyE1v7c)
+[Accomplisher.apk](https://drive.google.com/uc?authuser=0&id=1w7Xr07s1A-5RvNrgz5VE0ffbB8y95LCi&export=download)
 
 App Demo: [Demo](https://www.youtube.com/watch?v=6c6mMyE1v7c)
 
