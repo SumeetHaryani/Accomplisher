@@ -44,7 +44,7 @@
                 android:textSize="24sp"
                 app:met_baseColor="@android:color/white"
                 app:met_floatingLabel="highlight"
-                app:met_maxCharacters="20"
+                app:met_maxCharacters="40"
                 app:met_primaryColor="?colorAccent"
                 app:met_singleLineEllipsis="true" />
         </android.support.v7.widget.LinearLayoutCompat>

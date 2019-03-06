@@ -85,7 +85,7 @@ public class WallpaperVerticalViewPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, final int position) {
-        View itemView = mLayoutInflater.inflate(R.layout.motivation_content, container, false);
+        View itemView = mLayoutInflater.inflate(R.layout.wallpaper_content, container, false);
         ImageView imageView = itemView.findViewById(R.id.imageView);
         Button wallpaperButton = itemView.findViewById(R.id.btn_wallpaper);
         final StorageReference pathReference = getPathReference(position);

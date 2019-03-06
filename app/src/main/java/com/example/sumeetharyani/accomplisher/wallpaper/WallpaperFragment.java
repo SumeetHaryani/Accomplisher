@@ -50,7 +50,7 @@ public class WallpaperFragment extends Fragment {
                              Bundle savedInstanceState) {
         FirebaseStorage mFirebaseStorage = FirebaseStorage.getInstance();
         wallpaperStorageReference = mFirebaseStorage.getReference().child("wallpaper_photos");
-        View motivationView = inflater.inflate(R.layout.fragment_motivaton, container, false);
+        View motivationView = inflater.inflate(R.layout.fragment_wallpaper, container, false);
         WallpaperVerticalViewPager motivationVerticalViewPager = motivationView.findViewById(R.id.viewPager);
         motivationVerticalViewPager.setAdapter(new WallpaperVerticalViewPagerAdapter(getActivity()));
         return motivationView;

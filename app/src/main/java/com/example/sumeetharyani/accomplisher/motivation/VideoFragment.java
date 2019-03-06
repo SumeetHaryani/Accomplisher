@@ -48,7 +48,7 @@ public class VideoFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View videoView = inflater.inflate(R.layout.fragment_progress, container, false);
+        View videoView = inflater.inflate(R.layout.fragment_motivation, container, false);
         urlIndex = 0;
         btnNext = videoView.findViewById(R.id.button_next);
         btnPrev = videoView.findViewById(R.id.button_prev);
