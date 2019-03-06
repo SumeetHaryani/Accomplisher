@@ -5,6 +5,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.example.sumeetharyani.accomplisher.motivation.VideoFragment;
+import com.example.sumeetharyani.accomplisher.tasks.TaskFragment;
+import com.example.sumeetharyani.accomplisher.wallpaper.WallpaperFragment;
+
 class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
 
 
@@ -20,7 +24,7 @@ class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
             case 1:
                 return new VideoFragment();
             case 2:
-                return new MotivatonFragment();
+                return new WallpaperFragment();
             default:
                 return null;
         }

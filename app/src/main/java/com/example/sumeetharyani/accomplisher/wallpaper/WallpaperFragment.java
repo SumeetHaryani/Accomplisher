@@ -1,4 +1,4 @@
-package com.example.sumeetharyani.accomplisher;
+package com.example.sumeetharyani.accomplisher.wallpaper;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.sumeetharyani.accomplisher.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,12 +36,12 @@ import static android.app.Activity.RESULT_OK;
 import static android.support.constraint.Constraints.TAG;
 
 
-public class MotivatonFragment extends Fragment {
+public class WallpaperFragment extends Fragment {
     private static final int RC_PHOTO_PICKER = 2;
     private StorageReference wallpaperStorageReference;
 
 
-    public MotivatonFragment() {
+    public WallpaperFragment() {
         setHasOptionsMenu(true);
     }
 
@@ -50,8 +51,8 @@ public class MotivatonFragment extends Fragment {
         FirebaseStorage mFirebaseStorage = FirebaseStorage.getInstance();
         wallpaperStorageReference = mFirebaseStorage.getReference().child("wallpaper_photos");
         View motivationView = inflater.inflate(R.layout.fragment_motivaton, container, false);
-        MotivationVerticalViewPager motivationVerticalViewPager = motivationView.findViewById(R.id.viewPager);
-        motivationVerticalViewPager.setAdapter(new MotivationVerticalViewPagerAdapter(getActivity()));
+        WallpaperVerticalViewPager motivationVerticalViewPager = motivationView.findViewById(R.id.viewPager);
+        motivationVerticalViewPager.setAdapter(new WallpaperVerticalViewPagerAdapter(getActivity()));
         return motivationView;
 
     }
@@ -72,11 +73,10 @@ public class MotivatonFragment extends Fragment {
                     requestPermissions(
                             new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                             RC_PHOTO_PICKER);
+
                 } else {
                     chooseWallpaper();
                 }
-                // Do Fragment menu item stuff here
-                // Toast.makeText(getContext(),"click",Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 break;
@@ -112,29 +112,27 @@ public class MotivatonFragment extends Fragment {
         // Upload to Cloud Storage
         final String uuid = UUID.randomUUID().toString();
         wallpaperStorageReference = FirebaseStorage.getInstance().getReference("userWallpapers/" + uuid);
-        wallpaperStorageReference.putFile(uri)
-                .addOnSuccessListener((Activity) getContext(), new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        StorageReference ref = taskSnapshot.getStorage();
-                        final String downloadLink = String.valueOf(ref);
-                        Log.d(TAG, "SAM " + downloadLink);
-                        UploadDetails uploadDetails = null;
-                        if (user != null) {
-                            uploadDetails = new UploadDetails(downloadLink, user.getDisplayName());
-                        }
-                        DatabaseReference pRef = null;
-                        if (user != null) {
-                            pRef = myRef.child("usersUploads").child(user.getUid());
-                        }
-                        pRef.push().setValue(uploadDetails);
-                        Log.d(TAG, "uploadPhoto:onSuccess:" +
-                                downloadLink);
-                        Toast.makeText(getContext(), "Image uploaded",
-                                Toast.LENGTH_LONG).show();
+        wallpaperStorageReference.putFile(uri).addOnSuccessListener((Activity) getContext(), new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                StorageReference ref = taskSnapshot.getStorage();
+                final String downloadLink = String.valueOf(ref);
+                UploadDetails uploadDetails = null;
+                if (user != null) {
+                    uploadDetails = new UploadDetails(downloadLink, user.getDisplayName());
+                }
+                DatabaseReference pRef = null;
+                if (user != null) {
+                    pRef = myRef.child("usersUploads").child(user.getUid());
+                }
+                pRef.push().setValue(uploadDetails);
+                Log.d(TAG, "uploadPhoto:onSuccess:" +
+                        downloadLink);
+                Toast.makeText(getContext(), "Image uploaded",
+                        Toast.LENGTH_LONG).show();
 
-                    }
-                })
+            }
+        })
                 .addOnFailureListener((Activity) getContext(), new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {

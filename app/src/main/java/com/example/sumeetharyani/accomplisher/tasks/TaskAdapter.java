@@ -1,4 +1,4 @@
-package com.example.sumeetharyani.accomplisher;
+package com.example.sumeetharyani.accomplisher.tasks;
 
 
 import android.annotation.SuppressLint;
@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.sumeetharyani.accomplisher.R;
+import com.example.sumeetharyani.accomplisher.TaskEditorActivity;
 import com.example.sumeetharyani.accomplisher.data.TaskContract;
 
 import java.text.DateFormat;

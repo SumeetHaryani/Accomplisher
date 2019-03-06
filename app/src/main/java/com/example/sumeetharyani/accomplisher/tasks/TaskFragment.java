@@ -1,4 +1,4 @@
-package com.example.sumeetharyani.accomplisher;
+package com.example.sumeetharyani.accomplisher.tasks;
 
 import android.annotation.SuppressLint;
 import android.database.Cursor;
@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.sumeetharyani.accomplisher.R;
 import com.example.sumeetharyani.accomplisher.data.TaskContract;
 import com.example.sumeetharyani.accomplisher.data.TaskDbHelper;
 

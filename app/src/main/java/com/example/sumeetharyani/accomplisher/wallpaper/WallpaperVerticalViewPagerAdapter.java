@@ -1,4 +1,4 @@
-package com.example.sumeetharyani.accomplisher;
+package com.example.sumeetharyani.accomplisher.wallpaper;
 
 import android.app.WallpaperManager;
 import android.content.Context;
@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.example.sumeetharyani.accomplisher.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -30,41 +31,46 @@ import com.google.firebase.storage.StorageReference;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class MotivationVerticalViewPagerAdapter extends PagerAdapter {
+public class WallpaperVerticalViewPagerAdapter extends PagerAdapter {
 
 
     private final Context mContext;
     private final LayoutInflater mLayoutInflater;
     private ArrayList<String> uploads;
 
-    public MotivationVerticalViewPagerAdapter(Context context) {
+    public WallpaperVerticalViewPagerAdapter(Context context) {
         mContext = context;
         mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        getUserUploads();
+
+    }
+
+    private void getUserUploads() {
         FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            DatabaseReference mDatabaseReference = mFirebaseDatabase.getReference();
-            DatabaseReference ref1 = mDatabaseReference.child("usersUploads").child(user.getUid());
-            ref1.addValueEventListener(new ValueEventListener() {
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    uploads = new ArrayList<>();
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference mDatabaseReference = mFirebaseDatabase.getReference();
+        DatabaseReference ref1 = mDatabaseReference.child("usersUploads");
+        ref1.addValueEventListener(new ValueEventListener() {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (user != null) {
+                    dataSnapshot = dataSnapshot.child(user.getUid());
                     if (dataSnapshot.exists()) {
+                        uploads = new ArrayList<>();
                         for (DataSnapshot dsp : dataSnapshot.getChildren()) {
                             UploadDetails uploadDetails = dsp.getValue(UploadDetails.class);
                             uploads.add(uploadDetails.url);
 
                         }
-
                     }
-
                 }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                }
+            }
 
-            });
-        }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+
+        });
     }
 
     @Override
@@ -83,6 +89,21 @@ public class MotivationVerticalViewPagerAdapter extends PagerAdapter {
         ImageView imageView = itemView.findViewById(R.id.imageView);
         Button wallpaperButton = itemView.findViewById(R.id.btn_wallpaper);
         final StorageReference pathReference = getPathReference(position);
+        setWallpaper(wallpaperButton, pathReference);
+        loadImage(imageView, pathReference);
+        container.addView(itemView);
+        return itemView;
+    }
+
+    private void loadImage(ImageView imageView, StorageReference pathReference) {
+        Glide.with(mContext)
+                .load(pathReference)
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.ic_img))
+                .into(imageView);
+    }
+
+    private void setWallpaper(Button wallpaperButton, final StorageReference pathReference) {
         wallpaperButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,19 +123,13 @@ public class MotivationVerticalViewPagerAdapter extends PagerAdapter {
 
             }
         });
-        Glide.with(mContext)
-                .load(pathReference)
-                .apply(new RequestOptions()
-                        .placeholder(R.drawable.ic_img))
-                .into(imageView);
-        container.addView(itemView);
-        return itemView;
     }
 
     private StorageReference getPathReference(int position) {
+        //default wallpaper upto 20.
         if (position <= 19) {
             return FirebaseStorage.getInstance().getReferenceFromUrl("gs://accomplisher-7cdf5.appspot.com/IMG_" + (position + 1) + ".png");
-        } else if (position - 20 < uploads.size()) {
+        } else if (uploads != null && position - 20 < uploads.size()) {
             return FirebaseStorage.getInstance().getReferenceFromUrl(uploads.get(position - 20));
         }
         return null;

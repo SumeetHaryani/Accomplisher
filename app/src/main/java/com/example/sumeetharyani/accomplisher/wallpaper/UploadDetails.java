@@ -1,4 +1,4 @@
-package com.example.sumeetharyani.accomplisher;
+package com.example.sumeetharyani.accomplisher.wallpaper;
 
 public class UploadDetails {
     public String url;

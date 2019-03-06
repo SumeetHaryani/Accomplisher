@@ -1,4 +1,4 @@
-package com.example.sumeetharyani.accomplisher;
+package com.example.sumeetharyani.accomplisher.wallpaper;
 
 import android.content.Context;
 import android.support.v4.view.MotionEventCompat;
@@ -8,16 +8,16 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-public class MotivationVerticalViewPager extends ViewPager {
+public class WallpaperVerticalViewPager extends ViewPager {
     private static final float SWIPE_X_MIN_THRESHOLD = 50;
     private float x = 0;
 
-    public MotivationVerticalViewPager(Context context) {
+    public WallpaperVerticalViewPager(Context context) {
         super(context);
         init();
     }
 
-    public MotivationVerticalViewPager(Context context, AttributeSet attrs) {
+    public WallpaperVerticalViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }

@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/skyBlue"
-    tools:context=".MotivatonFragment">
+    tools:context=".wallpaper.WallpaperFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <com.example.sumeetharyani.accomplisher.MotivationVerticalViewPager
+    <com.example.sumeetharyani.accomplisher.wallpaper.WallpaperVerticalViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -16,7 +16,7 @@
         android:layout_marginRight="32dp"
         android:layout_marginBottom="128dp">
 
-    </com.example.sumeetharyani.accomplisher.MotivationVerticalViewPager>
+    </com.example.sumeetharyani.accomplisher.wallpaper.WallpaperVerticalViewPager>
 
     <ImageView
         android:id="@+id/imageView2"

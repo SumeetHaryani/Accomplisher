@@ -44,33 +44,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         firebaseAuth = FirebaseAuth.getInstance();
         final SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-        authStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    onSignedIntialize(user.getDisplayName());
-                    editor.putString("UID", user.getUid());
-                    editor.apply();
-                } else {
-                    editor.remove("UID");
-                    editor.commit();
-                    onSignedOutIntialize();
-                    startActivityForResult(
-                            AuthUI.getInstance()
-                                    .createSignInIntentBuilder()
-                                    .setIsSmartLockEnabled(false)
-                                    .setLogo(R.drawable.iconbig)
-                                    .setAvailableProviders(Arrays.asList(
-                                            new AuthUI.IdpConfig.GoogleBuilder().build(),
-                                            new AuthUI.IdpConfig.EmailBuilder().build())
-                                    )
-                                    .build(),
-                            RC_SIGN_IN);
-                }
-
-            }
-        };
+        userSignIn(editor);
         SimpleFragmentPagerAdapter fragmentPagerAdapter = new SimpleFragmentPagerAdapter(this, getSupportFragmentManager());
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.container);
@@ -106,6 +80,36 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void userSignIn(final SharedPreferences.Editor editor) {
+        authStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    onSignedIntialize(user.getDisplayName());
+                    editor.putString("UID", user.getUid());
+                    editor.apply();
+                } else {
+                    editor.remove("UID");
+                    editor.commit();
+                    onSignedOutIntialize();
+                    startActivityForResult(
+                            AuthUI.getInstance()
+                                    .createSignInIntentBuilder()
+                                    .setIsSmartLockEnabled(false)
+                                    .setLogo(R.drawable.iconbig)
+                                    .setAvailableProviders(Arrays.asList(
+                                            new AuthUI.IdpConfig.GoogleBuilder().build(),
+                                            new AuthUI.IdpConfig.EmailBuilder().build())
+                                    )
+                                    .build(),
+                            RC_SIGN_IN);
+                }
+
+            }
+        };
     }
 
     @Override
